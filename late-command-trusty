@@ -1,0 +1,64 @@
+#!/bin/bash
+
+################################################################################
+## replace hostname with mac address
+################################################################################
+
+NEW_HOSTNAME=$(ifconfig eth0 | grep -oi '[0-9A-F]\{2\}\(:[0-9A-F]\{2\}\)\{5\}' | sed 's,:,,g')
+
+sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hosts
+sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hostname
+
+################################################################################
+## add apt pinning for mint
+################################################################################
+
+cat > /etc/apt/preferences.d/official-extra-repositories.pref << EOF
+Package: *
+Pin: origin build.linuxmint.com
+Pin-Priority: 700
+EOF
+
+cat > /etc/apt/preferences.d/official-package-repositories.pref << EOF
+Package: *
+Pin: origin live.linuxmint.com
+Pin-Priority: 750
+
+Package: *
+Pin: release o=linuxmint,c=upstream
+Pin-Priority: 700
+
+Package: *
+Pin: release o=Ubuntu
+Pin-Priority: 500
+EOF
+
+################################################################################
+## fix sources list
+################################################################################
+
+wget -q https://raw.githubusercontent.com/morph027/preseed-linuxmint/master/sources.list -O /etc/apt/sources.list
+
+################################################################################
+## fix network-manager
+################################################################################
+
+cat > /etc/network/interfaces << EOF
+# interfaces(5) file used by ifup(8) and ifdown(8)
+auto lo
+iface lo inet loopback
+
+EOF
+
+################################################################################
+## install LTSEnablementStack
+## https://wiki.ubuntu.com/Kernel/LTSEnablementStack
+################################################################################
+
+apt-get install -y --install-recommends \
+linux-generic-lts-vivid \
+xserver-xorg-core-lts-vivid \
+xserver-xorg-lts-vivid \
+xserver-xorg-video-all-lts-vivid \
+xserver-xorg-input-all-lts-vivid \
+libwayland-egl1-mesa-lts-vivid
