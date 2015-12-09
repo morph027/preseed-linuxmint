@@ -1,12 +1,20 @@
 # Preseed Linux Mint
 
-*HINT*: Regard this thing as a template, please adjust to your needs (packages,localizations,...) 
+**HINT**: Regard this thing as a template, please adjust to your needs (packages,localizations,...) 
 
 As ubiquity does not allow as much customizations as preseed (e.g. local repos), we are bootstrapping a minimal ubuntu, add Linux Mint repos and then the packages. You might adjust things to your needs, like desktop environment (MATE/Cinnamon) and Login Manager (MDM/LightDM) and so on.
 
 It will ask for:
 
 * hostname
+
+After installation is finished, the encryption and user (_it_) password is ```insecure```
+
+You can change the encryption password like so:
+
+```
+sudo cryptsetup luksChangeKey /dev/sda3
+```
 
 ## PXE setup
 
