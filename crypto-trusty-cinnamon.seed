@@ -26,8 +26,6 @@ d-i countrychooser/country-name select Germany
 
 d-i netcfg/choose_interface select auto
 d-i netcfg/wireless_wep string
-d-i netcfg/get_hostname string PRESEED
-d-i netcfg/get_domain string LAN
 
 ################################################################################
 ### Mirror settings
@@ -137,6 +135,9 @@ tasksel tasksel/first multiselect ubuntu-minimal
 # Individual additional packages to install
 d-i pkgsel/include string \
 	mint-meta-cinnamon \
+	mint-info-cinnamon \
+	mint-meta-core \
+	ttf-ubuntu-font-family \
 	lightdm \
 	unity-greeter \
 	light-themes \
@@ -147,6 +148,10 @@ d-i pkgsel/include string \
 	curl \
 	thunderbird \
 	thunderbird-locale-de \
+	thunderbird-locale-en-gb \
+	firefox \
+	firefox-locale-de \
+	fireflox-locale-en \
 	xul-ext-lightning \
 	mc \
 	bash-completion \
@@ -163,7 +168,6 @@ d-i pkgsel/include string \
 	wbritish \
 	hunspell-de-de \
 	hunspell-de-ch \
-	thunderbird-locale-en-gb \
 	libreoffice-help-en-gb \
 	libreoffice-l10n-de \
 	hyphen-en-us \

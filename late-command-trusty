@@ -1,15 +1,6 @@
 #!/bin/bash
 
 ################################################################################
-## replace hostname with mac address
-################################################################################
-
-NEW_HOSTNAME=$(ifconfig eth0 | grep -oi '[0-9A-F]\{2\}\(:[0-9A-F]\{2\}\)\{5\}' | sed 's,:,,g')
-
-sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hosts
-sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hostname
-
-################################################################################
 ## add apt pinning for mint
 ################################################################################
 
@@ -38,6 +29,7 @@ EOF
 ################################################################################
 
 wget -q https://raw.githubusercontent.com/morph027/preseed-linuxmint/master/sources.list -O /etc/apt/sources.list
+apt-get update
 
 ################################################################################
 ## fix network-manager
@@ -51,6 +43,30 @@ iface lo inet loopback
 EOF
 
 ################################################################################
+## fix shutdown menu
+## http://forums.linuxmint.com/viewtopic.php?f=239&t=197339#p1024204
+## http://www.burtonini.com/blog/computers/gsettings-override-2011-07-04-15-45
+################################################################################
+
+cat > /usr/share/glib-2.0/schemas/org.cinnamon.desktop.session.gschema.override << EOF
+[org.cinnamon.desktop.session]
+settings-daemon-uses-logind=true
+session-manager-uses-logind=true
+screensaver-uses-logind=false
+EOF
+
+glib-compile-schemas /usr/share/glib-2.0/schemas
+
+################################################################################
+## Mint theming for LightDM
+################################################################################
+
+sudo -u lightdm -H /bin/sh -c 'eval `dbus-launch --auto-syntax` && gsettings set com.canonical.unity-greeter background /usr/share/backgrounds/linuxmint/linuxmint.jpg'
+sudo -u lightdm -H /bin/sh -c 'eval `dbus-launch --auto-syntax` && gsettings set com.canonical.unity-greeter draw-user-backgrounds false'
+sudo -u lightdm -H /bin/sh -c 'eval `dbus-launch --auto-syntax` && gsettings set com.canonical.unity-greeter draw-grid false'
+mv /usr/share/unity-greeter/logo.png /usr/share/unity-greeter/logo.png.bak
+
+################################################################################
 ## install LTSEnablementStack
 ## https://wiki.ubuntu.com/Kernel/LTSEnablementStack
 ################################################################################
@@ -62,3 +78,23 @@ xserver-xorg-lts-vivid \
 xserver-xorg-video-all-lts-vivid \
 xserver-xorg-input-all-lts-vivid \
 libwayland-egl1-mesa-lts-vivid
+
+################################################################################
+## cleanup
+################################################################################
+
+apt-get autoremove -y
+apt-get clean
+
+################################################################################
+## tweaks
+################################################################################
+
+## bashrc
+
+# color prompt
+sed -i 's,^#force_color_prompt,force_color_prompt,' /etc/skel/.bashrc
+# add to it user
+cp /etc/skel/.bashrc /home/it/
+# add to root user, red prompt
+sed 's,01;32m,01;31m,' /etc/skel/.bashrc > /root/.bashrc
