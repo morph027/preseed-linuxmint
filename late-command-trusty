@@ -24,6 +24,15 @@ Pin: release o=Ubuntu
 Pin-Priority: 500
 EOF
 
+cat > /etc/apt/apt.conf.d/00recommends << EOF
+APT::Install-Recommends "false";
+Aptitude::Recommends-Important "false";
+EOF
+
+cat > /etc/apt/apt.conf.d/99synaptic << EOF
+APT::Install-Recommends "false";
+EOF
+
 ################################################################################
 ## fix sources list
 ################################################################################
