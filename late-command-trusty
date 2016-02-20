@@ -11,6 +11,15 @@ logger -t late-command "setting hostname to mac address"
 sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hosts
 sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hostname
 
+cat > /etc/apt/apt.conf.d/00recommends << EOF
+APT::Install-Recommends "false";
+Aptitude::Recommends-Important "false";
+EOF
+
+cat > /etc/apt/apt.conf.d/99synaptic << EOF
+APT::Install-Recommends "false";
+EOF
+
 ################################################################################
 ## fix sources list
 ################################################################################
