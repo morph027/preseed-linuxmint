@@ -37,17 +37,11 @@ deb-src http://de.archive.ubuntu.com/ubuntu trusty-updates multiverse
 ## newer versions of some applications which may provide useful features.
 ## Also, please note that software in backports WILL NOT receive any review
 ## or updates from the Ubuntu security team.
-deb http://de.archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse
+#deb http://de.archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse
 
-## Linuxmint
-deb http://packages.linuxmint.com rosa main upstream import
-
-## Linuxmint Extra
-deb http://extra.linuxmint.com rosa main
-
-## Packetwerk
-deb http://www.hq.packetwerk.com/repos/apt/ubuntu trusty main
+## Cinnamon Stable PPA
+deb hhtp://ppa.launchpad.net/moorkai/cinnamon/ubuntu trusty main
 
 deb http://security.ubuntu.com/ubuntu trusty-security main restricted
 deb-src http://security.ubuntu.com/ubuntu trusty-security main restricted

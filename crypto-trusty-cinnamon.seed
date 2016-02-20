@@ -32,14 +32,10 @@ d-i netcfg/wireless_wep string
 ################################################################################
 
 d-i mirror/country string manual
-## use this for local apt-cacher-ng
-#d-i mirror/http/hostname string apt-cacher-ng:3142
-d-i mirror/http/hostname string de.archive.ubuntu.com
-## use this for local apt-cacher-ng
-#d-i mirror/http/directory string /de.archive.ubuntu.com/ubuntu
-d-i mirror/http/directory string /ubuntu
+d-i mirror/http/hostname string apt-cacher-ng:3142
+d-i mirror/http/directory string /de.archive.ubuntu.com/ubuntu
 d-i mirror/http/proxy string
-d-i mirror/http/mirror select
+d-i mirror/http/mirror select apt-cacher-ng:3142
 
 ################################################################################
 ### Clock and time zone setup
@@ -53,8 +49,8 @@ d-i clock-setup/ntp boolean true
 ### Partitioning
 ################################################################################
 
-d-i preseed/early_command string umount /media || true
-d-i partman/unmount_active boolean true
+#d-i preseed/early_command string umount /media || true
+#d-i partman/unmount_active boolean true
 d-i partman-auto/method string crypto
 d-i partman-crypto/passphrase password insecure
 d-i partman-crypto/passphrase-again password insecure
@@ -87,8 +83,8 @@ d-i partman-lvm/confirm_nooverwrite boolean true
 ### Account setup
 ################################################################################
 
-d-i passwd/user-fullname string ADMIN
-d-i passwd/username string admin
+d-i passwd/user-fullname string IT
+d-i passwd/username string it
 d-i passwd/user-password password insecure
 d-i passwd/user-password-again password insecure
 d-i user-setup/allow-password-weak boolean true
@@ -102,29 +98,25 @@ d-i user-setup/encrypt-home boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/multiverse boolean true
 d-i apt-setup/services-select multiselect security
-## use this for local apt-cacher-ng
-#d-i apt-setup/security_host string apt-cacher-ng:3142
-d-i apt-setup/security_host string security.ubuntu.com
-## use this for local apt-cacher-ng
-#d-i apt-setup/security_path string /security.ubuntu.com/ubuntu
-d-i apt-setup/security_path string /ubuntu
+d-i apt-setup/security_host string apt-cacher-ng:3142
+d-i apt-setup/security_path string /security.ubuntu.com/ubuntu
 d-i apt-setup/extras boolean true
 
 ## use this for local apt-cacher-ng
-#d-i apt-setup/local0/repository string http://apt-cacher-ng:3142/packages.linuxmint.com rosa main upstream import
-d-i apt-setup/local0/repository string http://packages.linuxmint.com rosa main upstream import
-d-i apt-setup/local0/comment string Linuxmint
+#d-i apt-setup/local0/repository string http://apt-cacher-ng:3142/ppa.launchpad.net/moorkai/cinnamon/ubuntu trusty main
+d-i apt-setup/local0/repository string http://ppa.launchpad.net/moorkai/cinnamon/ubuntu trusty main
+d-i apt-setup/local0/comment string Cinnamon Stable PPA
 ## use this for local keyserver
-#d-i apt-setup/local0/key string http://keyserver:11371/pks/lookup?op=get&search=0x3EE67F3D0FF405B2
-d-i apt-setup/local0/key string http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x3EE67F3D0FF405B2
+#d-i apt-setup/local0/key string http://keyserver:11371/pks/lookup?op=get&search=0xc22671ffd0d384d8
+d-i apt-setup/local0/key string http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xc22671ffd0d384d8
 
 ## use this for local apt-cacher-ng
-#d-i apt-setup/local1/repository string http://apt-cacher-ng:3142/extra.linuxmint.com rosa main
-d-i apt-setup/local1/repository string http://extra.linuxmint.com rosa main
-d-i apt-setup/local1/comment string Linuxmint Extra
+#d-i apt-setup/local2/repository string http://apt-cacher-ng:3142/ppa.launchpad.net/numix/ppa/ubuntu trusty main
+d-i apt-setup/local2/repository string http://ppa.launchpad.net/numix/ppa/ubuntu trusty main
+d-i apt-setup/local2/comment string Numix Project
 ## use this for local keyserver
-#d-i apt-setup/local1/key string http://keyserver:11371/pks/lookup?op=get&search=0x3EE67F3D0FF405B2
-d-i apt-setup/local1/key string http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x3EE67F3D0FF405B2
+#d-i apt-setup/local2/key string http://keyserver:11371/pks/lookup?op=get&search=0x52B709720F164EEB
+d-i apt-setup/local2/key string http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x52B709720F164EEB
 
 ################################################################################
 ### Package selection
@@ -134,64 +126,81 @@ tasksel tasksel/first multiselect ubuntu-minimal
 
 # Individual additional packages to install
 d-i pkgsel/include string \
-	mint-meta-cinnamon \
-	mint-info-cinnamon \
-	mint-meta-core \
-	ttf-ubuntu-font-family \
-	lightdm \
-	unity-greeter \
-	light-themes \
-	xinit \
-	openssh-server \
-	vim \
+	bash-completion \
 	chromium-browser \
+	cinnamon \
+	command-not-found \
+	cron-apt \
 	curl \
-	thunderbird \
-	thunderbird-locale-de \
-	thunderbird-locale-en-gb \
+	dconf-tools \
 	firefox \
 	firefox-locale-de \
-	fireflox-locale-en \
-	xul-ext-lightning \
-	mc \
-	bash-completion \
-	command-not-found \
-	dconf-tools \
-	cron-apt \
+	firefox-locale-de \
+	firefox-locale-en \
+	firefox-locale-en \
+	gedit \
+	gedit-plugins \
 	git \
-	pidgin \
-	pidgin-plugin-pack \
-	pidgin-hotkeys \
-	wswiss \
-	wngerman \
-	hyphen-de \
-	wbritish \
-	hunspell-de-de \
+	gnome-terminal \
+	hunspell-de-at \
 	hunspell-de-ch \
+	hunspell-de-de \
+	hunspell-en-ca \
+	hyphen-de \
+	hyphen-en-us \
+	language-selector-gnome \
+	libreoffice-help-de \
 	libreoffice-help-en-gb \
 	libreoffice-l10n-de \
-	hyphen-en-us \
-	firefox-locale-en \
-	firefox-locale-de \
-	poppler-data \
-	mythes-de-ch \
-	hunspell-de-at \
-	mythes-de \
-	wogerman \
-	mythes-en-au \
-	thunderbird-locale-en-us \
-	myspell-en-za \
-	libreoffice-help-de \
+	libreoffice-l10n-en-gb \
 	libreoffice-l10n-en-za \
-	thunderbird-locale-en \
-	hunspell-en-ca \
-	openoffice.org-hyphenation \
+	lightdm \
+	light-themes \
+	mc \
 	myspell-en-au \
 	myspell-en-gb \
-	libreoffice-l10n-en-gb \
+	myspell-en-za \
+	mythes-de \
+	mythes-de-ch \
+	mythes-en-au \
 	mythes-en-us \
+	nemo \
+	nemo-fileroller \
+	nemo-fileroller \
+	nemo-folder-color-switcher \
+	nemo-gtkhash \
+	nemo-image-comverter \
+	nemo-media-columns \
+	nemo-preview \
+	nemo-seahorse \
+	nemo-share \
+	numix-gtk-theme \
+	numix-icon-theme-circle \
+	openoffice.org-hyphenation \
+	openssh-server \
+	pidgin \
+	pidgin-hotkeys \
+	pidgin-plugin-pack \
+	pm-utils \
+	poppler-data \
+	rfkill \
+	salt-minion \
+	terminator \
+	thunderbird \
+	thunderbird-locale-de \
+	thunderbird-locale-en \
+	thunderbird-locale-en-gb \
+	thunderbird-locale-en-us \
+	ttf-ubuntu-font-family \
+	unity-greeter \
+	vim \
 	wamerican \
-	gnome-terminal
+	wbritish \
+	wngerman \
+	wogerman \
+	wswiss \
+	xinit \
+	xul-ext-lightning
 
 # see https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1317602
 #d-i pkgsel/upgrade select none

@@ -1,39 +1,36 @@
 #!/bin/bash
 
 ################################################################################
-## add apt pinning for mint
+## replace hostname with mac address
 ################################################################################
 
-cat > /etc/apt/preferences.d/official-extra-repositories.pref << EOF
-Package: *
-Pin: origin build.linuxmint.com
-Pin-Priority: 700
-EOF
+NEW_HOSTNAME=$(ifconfig eth0 | grep -oi '[0-9A-F]\{2\}\(:[0-9A-F]\{2\}\)\{5\}' | sed 's,:,,g')
 
-cat > /etc/apt/preferences.d/official-package-repositories.pref << EOF
-Package: *
-Pin: origin live.linuxmint.com
-Pin-Priority: 750
+logger -t late-command "setting hostname to mac address"
 
-Package: *
-Pin: release o=linuxmint,c=upstream
-Pin-Priority: 700
-
-Package: *
-Pin: release o=Ubuntu
-Pin-Priority: 500
-EOF
+sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hosts
+sed -i 's,PRESEED,'${NEW_HOSTNAME}',g' /etc/hostname
 
 ################################################################################
 ## fix sources list
 ################################################################################
 
+# grap source.lists file
+logger -t late-command "getting original sources.list"
 wget -q https://raw.githubusercontent.com/morph027/preseed-linuxmint/master/sources.list -O /etc/apt/sources.list
+
+# add extras.ubuntu.com gpg key
+logger -t late-command "getting key 16126D3A3E5C1192"
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16126D3A3E5C1192
+# refresh package lists
+logger -t late-command "refresh package lists"
 apt-get update
 
 ################################################################################
 ## fix network-manager
 ################################################################################
+
+logger -t late-command "fixing network-manager"
 
 cat > /etc/network/interfaces << EOF
 # interfaces(5) file used by ifup(8) and ifdown(8)
@@ -44,9 +41,9 @@ EOF
 
 ################################################################################
 ## fix shutdown menu
-## http://forums.linuxmint.com/viewtopic.php?f=239&t=197339#p1024204
-## http://www.burtonini.com/blog/computers/gsettings-override-2011-07-04-15-45
 ################################################################################
+
+logger -t late-command "fixing shutdown menu"
 
 cat > /usr/share/glib-2.0/schemas/org.cinnamon.desktop.session.gschema.override << EOF
 [org.cinnamon.desktop.session]
@@ -58,30 +55,42 @@ EOF
 glib-compile-schemas /usr/share/glib-2.0/schemas
 
 ################################################################################
-## Mint theming for LightDM
+## set cinnamon as default session
 ################################################################################
 
-sudo -u lightdm -H /bin/sh -c 'eval `dbus-launch --auto-syntax` && gsettings set com.canonical.unity-greeter background /usr/share/backgrounds/linuxmint/linuxmint.jpg'
-sudo -u lightdm -H /bin/sh -c 'eval `dbus-launch --auto-syntax` && gsettings set com.canonical.unity-greeter draw-user-backgrounds false'
-sudo -u lightdm -H /bin/sh -c 'eval `dbus-launch --auto-syntax` && gsettings set com.canonical.unity-greeter draw-grid false'
-mv /usr/share/unity-greeter/logo.png /usr/share/unity-greeter/logo.png.bak
+logger -t late-command "make cinnamon default"
+
+cat > /usr/share/lightdm/lightdm.conf.d/50-cinnamon.conf << EOF
+[SeatDefaults]
+user-session=cinnamon
+EOF
+
+################################################################################
+## install additional packages
+################################################################################
+
+logger -t late-command "installing additional packages"
 
 ################################################################################
 ## install LTSEnablementStack
 ## https://wiki.ubuntu.com/Kernel/LTSEnablementStack
 ################################################################################
 
-apt-get install -y --install-recommends \
-linux-generic-lts-vivid \
-xserver-xorg-core-lts-vivid \
-xserver-xorg-lts-vivid \
-xserver-xorg-video-all-lts-vivid \
-xserver-xorg-input-all-lts-vivid \
-libwayland-egl1-mesa-lts-vivid
+logger -t late-command "installing lts stack"
+
+apt-get install --install-recommends -y \
+linux-generic-lts-wily \
+xserver-xorg-core-lts-wily \
+xserver-xorg-lts-wily \
+xserver-xorg-video-all-lts-wily \
+xserver-xorg-input-all-lts-wily \
+libwayland-egl1-mesa-lts-wily 
 
 ################################################################################
 ## cleanup
 ################################################################################
+
+logger -t late-command "cleanup"
 
 apt-get autoremove -y
 apt-get clean
@@ -93,8 +102,10 @@ apt-get clean
 ## bashrc
 
 # color prompt
-sed -i 's,^#force_color_prompt,force_color_prompt,' /etc/skel/.bashrc
-# add to it user
-cp /etc/skel/.bashrc /home/it/
+sed -i 's,^#force_color_prompt,force_color_prompt,' /etc/skel/.bashrc /home/it/.bashrc
 # add to root user, red prompt
 sed 's,01;32m,01;31m,' /etc/skel/.bashrc > /root/.bashrc
+
+################################################################################
+## user settings
+################################################################################
