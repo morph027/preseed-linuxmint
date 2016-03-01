@@ -55,6 +55,24 @@ user-session=cinnamon
 EOF
 
 ################################################################################
+## set nemo as default filebrowser
+################################################################################
+
+logger -t late-command "make nemo default"
+
+mkdir -p /etc/skel/.local/share
+cat > /etc/skel/.local/share/applications << EOF
+
+[Default Applications]
+inode/directory=nemo.desktop
+application/x-gnome-saved-search=nemo.desktop
+EOF
+
+logger -t late-command "remove nautilus"
+
+apt-get purge nautilus -y
+
+################################################################################
 ## install additional packages
 ################################################################################
 

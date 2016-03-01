@@ -199,6 +199,7 @@ d-i pkgsel/include string \
 	wngerman \
 	wogerman \
 	wswiss \
+	xdg-user-dirs \
 	xinit \
 	xul-ext-lightning
 
