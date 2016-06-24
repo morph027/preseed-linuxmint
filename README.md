@@ -24,7 +24,7 @@ In your PXE server setup, you need to add something like this:
 label install
         menu label Preseed Cinnamon
         kernel ubuntu-installer/linux
-        append preseed/url=http://some.host/preseed/crypto-trusty-cinnamon.seed initrd=ubuntu-installer/initrd.gz locale=de_DE.UTF-8 debian/priority=critical vga=normal debian-installer/keymap=de console-keymaps-at/keymap=de console-setup/layoutcode=de_DE netcfg/choose_interface=auto localechooser/translation/warn-light=true localechooser/translation/warn-severe=true console-setup/ask_detect=false --
+        append preseed/url=http://some.host/preseed/crypto-xenial-cinnamon.seed initrd=ubuntu-installer/initrd.gz locale=de_DE.UTF-8 debian/priority=critical vga=normal debian-installer/keymap=de console-keymaps-at/keymap=de console-setup/layoutcode=de_DE netcfg/choose_interface=auto localechooser/translation/warn-light=true localechooser/translation/warn-severe=true console-setup/ask_detect=false --
 ```
 
 ## Extras
@@ -35,4 +35,4 @@ As we are using an apt-cacher-ng host in our network, we'd like to use this for 
 
 ### LightDM Mint Theme
 
-See section in _late-command-trusty_
+See section in _late-command-xenial_
