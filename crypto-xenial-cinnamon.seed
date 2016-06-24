@@ -5,7 +5,7 @@
 d-i debian-installer/locale string de_DE.UTF-8
 d-i debian-installer/language string de
 d-i debian-installer/country string DE
-d-i localechooser/supported-locales en_US.UTF-8
+d-i localechooser/supported-locales de_DE.UTF-8
 d-i localechooser/translation/warn-light boolean true
 d-i localechooser/translation/warn-severe boolean true
 
@@ -32,10 +32,16 @@ d-i netcfg/wireless_wep string
 ################################################################################
 
 d-i mirror/country string manual
-d-i mirror/http/hostname string apt-cacher-ng:3142
-d-i mirror/http/directory string /de.archive.ubuntu.com/ubuntu
+## use this for local apt-cacher-ng
+#d-i mirror/http/hostname string apt-cacher-ng:3142
+d-i mirror/http/hostname string de.archive.ubuntu.com
+## use this for local apt-cacher-ng
+#d-i mirror/http/directory string /de.archive.ubuntu.com/ubuntu
+d-i mirror/http/directory string /ubuntu
 d-i mirror/http/proxy string
-d-i mirror/http/mirror select apt-cacher-ng:3142
+## use this for local apt-cacher-ng
+#d-i mirror/http/mirror select apt-cacher-ng:3142
+d-i mirror/http/mirror select de.archive.ubuntu.com
 
 ################################################################################
 ### Clock and time zone setup
@@ -79,6 +85,9 @@ d-i partman-lvm/confirm_nooverwrite boolean true
 ### Base system installation
 ################################################################################
 
+#d-i base-installer/kernel/skip-install boolean true
+#d-i base-installer/kernel/image string linux-generic
+
 ################################################################################
 ### Account setup
 ################################################################################
@@ -98,21 +107,25 @@ d-i user-setup/encrypt-home boolean true
 d-i apt-setup/universe boolean true
 d-i apt-setup/multiverse boolean true
 d-i apt-setup/services-select multiselect security
-d-i apt-setup/security_host string apt-cacher-ng:3142
-d-i apt-setup/security_path string /security.ubuntu.com/ubuntu
-d-i apt-setup/extras boolean true
+## use this for local apt-cacher-ng
+#d-i apt-setup/security_host string apt-cacher-ng:3142
+d-i apt-setup/security_host string de.archive.ubuntu.com
+## use this for local apt-cacher-ng
+#d-i apt-setup/security_path string /security.ubuntu.com/ubuntu
+d-i apt-setup/security_path string /ubuntu
+#d-i apt-setup/extras boolean true
 
 ## use this for local apt-cacher-ng
-#d-i apt-setup/local0/repository string http://apt-cacher-ng:3142/ppa.launchpad.net/moorkai/cinnamon/ubuntu trusty main
-d-i apt-setup/local0/repository string http://ppa.launchpad.net/moorkai/cinnamon/ubuntu trusty main
+#d-i apt-setup/local0/repository string http://apt-cacher-ng:3142/ppa.launchpad.net/embrosyn/cinnamon/ubuntu xenial main
+d-i apt-setup/local0/repository string http://ppa.launchpad.net/embrosyn/cinnamon/ubuntu xenial main
 d-i apt-setup/local0/comment string Cinnamon Stable PPA
 ## use this for local keyserver
-#d-i apt-setup/local0/key string http://keyserver:11371/pks/lookup?op=get&search=0xc22671ffd0d384d8
-d-i apt-setup/local0/key string http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xc22671ffd0d384d8
+#d-i apt-setup/local0/key string http://keyserver:11371/pks/lookup?op=get&search=0xEA1FE56966DFE684
+d-i apt-setup/local0/key string http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xEA1FE56966DFE684
 
 ## use this for local apt-cacher-ng
-#d-i apt-setup/local2/repository string http://apt-cacher-ng:3142/ppa.launchpad.net/numix/ppa/ubuntu trusty main
-d-i apt-setup/local2/repository string http://ppa.launchpad.net/numix/ppa/ubuntu trusty main
+#d-i apt-setup/local2/repository string http://apt-cacher-ng:3142/ppa.launchpad.net/numix/ppa/ubuntu xenial main
+d-i apt-setup/local2/repository string http://ppa.launchpad.net/numix/ppa/ubuntu xenial main
 d-i apt-setup/local2/comment string Numix Project
 ## use this for local keyserver
 #d-i apt-setup/local2/key string http://keyserver:11371/pks/lookup?op=get&search=0x52B709720F164EEB
@@ -126,22 +139,30 @@ tasksel tasksel/first multiselect ubuntu-minimal
 
 # Individual additional packages to install
 d-i pkgsel/include string \
+	adwaita-icon-theme-full \
 	bash-completion \
+	blueman \
 	chromium-browser \
 	cinnamon \
+	cinnamon-session \
 	command-not-found \
 	cron-apt \
 	curl \
 	dconf-tools \
+	eog \
+	evince \
 	firefox \
 	firefox-locale-de \
 	firefox-locale-de \
 	firefox-locale-en \
 	firefox-locale-en \
+	fonts-noto \
 	gedit \
 	gedit-plugins \
 	git \
+	gnupg2 \
 	gnome-terminal \
+	gnome-calculator \
 	hunspell-de-at \
 	hunspell-de-ch \
 	hunspell-de-de \
@@ -149,6 +170,7 @@ d-i pkgsel/include string \
 	hyphen-de \
 	hyphen-en-us \
 	language-selector-gnome \
+	libreoffice \
 	libreoffice-help-de \
 	libreoffice-help-en-gb \
 	libreoffice-l10n-de \
@@ -166,16 +188,12 @@ d-i pkgsel/include string \
 	mythes-en-us \
 	nemo \
 	nemo-fileroller \
-	nemo-fileroller \
-	nemo-folder-color-switcher \
 	nemo-gtkhash \
-	nemo-image-comverter \
+	nemo-image-converter \
 	nemo-media-columns \
 	nemo-preview \
 	nemo-seahorse \
 	nemo-share \
-	numix-gtk-theme \
-	numix-icon-theme-circle \
 	openoffice.org-hyphenation \
 	openssh-server \
 	pidgin \
@@ -192,6 +210,8 @@ d-i pkgsel/include string \
 	thunderbird-locale-en-gb \
 	thunderbird-locale-en-us \
 	ttf-ubuntu-font-family \
+	ubuntu-drivers-common \
+	ubuntu-wallpapers \
 	unity-greeter \
 	vim \
 	wamerican \
@@ -241,4 +261,4 @@ xserver-xorg xserver-xorg/config/monitor/mode-list select 1024x768 @ 60 Hz
 ### Running custom commands during the installation
 ################################################################################
 
-d-i preseed/late_command string in-target /bin/sh -c 'wget -q -O - https://raw.githubusercontent.com/morph027/preseed-linuxmint/master/late-command-trusty | bash'
+d-i preseed/late_command string in-target /bin/sh -c 'wget -q -O - https://raw.githubusercontent.com/morph027/preseed-linuxmint/blob/xenial/late-command-xenial | bash'
